@@ -3,9 +3,10 @@ import React, { ReactNode } from 'react';
 import { Metadata } from 'next';
 import Script from 'next/script';
 import ErrorBoundary from '../components/ErrorBoundary';
+import MaintenancePage from '../components/MaintenancePage';
 import { AppProvider } from '../lib/context/AppContext';
 import { WebVitals } from '../components/WebVitals';
-import { AdsterraSocialBar } from '../components/Adsterra';
+import { AdsterraSocialBar, AdsterraGlobalScript } from '../components/Adsterra';
 import { WebSiteStructuredData, OrganizationStructuredData } from '../components/StructuredData';
 
 export const metadata: Metadata = {
@@ -71,6 +72,8 @@ interface RootLayoutProps {
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
+  const isMaintenanceMode = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === 'true';
+
   return (
     <html lang="en" className="scroll-smooth">
       <head>
@@ -86,12 +89,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <ErrorBoundary>
           <AppProvider>
             <WebVitals />
-            {children}
+            {isMaintenanceMode ? <MaintenancePage /> : children}
             <AdsterraSocialBar />
-            <Script
-              src="https://pl30566409.effectivecpmnetwork.com/ae/e9/b6/aee9b68f1c1f686885459e2e432d7177.js"
-              strategy="afterInteractive"
-            />
+            <AdsterraGlobalScript />
           </AppProvider>
         </ErrorBoundary>
       </body>
